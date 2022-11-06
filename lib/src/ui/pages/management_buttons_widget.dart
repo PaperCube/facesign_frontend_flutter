@@ -1,3 +1,4 @@
+import 'management_page.dart';
 import '../ui_style.dart' as style;
 
 import 'package:flutter/material.dart';
@@ -23,7 +24,13 @@ class ManagementButtonsWidget extends StatelessWidget {
             children: [
               ...prependingWidgets,
               OutlinedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ManagementPage(),
+                    ),
+                  );
+                },
                 child: const Text('管理'),
               ),
               style.horizontalButtonSpacing,

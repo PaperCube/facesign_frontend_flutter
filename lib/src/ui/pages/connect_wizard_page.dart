@@ -1,4 +1,6 @@
+import 'package:facesign_frontend/src/core/states/connection_state.dart';
 import 'package:facesign_frontend/src/ui/pages/management_buttons_widget.dart';
+import 'package:flutter/rendering.dart';
 
 import '../ui_style.dart' as style;
 import '../dialogs.dart';
@@ -31,14 +33,15 @@ class _ConnectWizardPageState extends ConsumerState<ConnectWizardPage> {
 
       final websocketFuture = WebSocket.connect(addr);
       websocketFuture.then((ws) {
+        ref.read(wsProvider.notifier).replaceWith(ws);
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => SignPage(baseWs: ws),
+          builder: (context) => SignPage(),
         ));
       }).catchError((error, stackTrace) {
         Dialogs.showAlertDialog(
             context, 'Connection failed', 'Failed to connect to $addr: $error');
       }).whenComplete(() {
-        setState(() {
+        setState(() { 
           _isLoading = false;
         });
       });
@@ -54,37 +57,51 @@ class _ConnectWizardPageState extends ConsumerState<ConnectWizardPage> {
     return Card(
       child: UnconstrainedBox(
         child: LimitedBox(
-          maxWidth: 600,
-          child: Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(48.0),
-            child: Column(
-              children: <Widget>[
-                const Text('Select an option', style: style.subtitleStyle),
-                style.verticalButtonSpacing,
-                OutlinedButton(
-                  onPressed: () => Dialogs.showNotImplementedDialog(
-                      context, 'Local Backend'),
-                  child: const Text('Launch Local Backend'),
+          maxWidth: 500,
+          child: Stack(
+            children: [
+              Container(
+                alignment: Alignment.topCenter,
+                child: AnimatedSwitcher(
+                  duration: const Duration(microseconds: 300),
+                  child: _isLoading
+                      ? const LinearProgressIndicator(key: Key('indicator'), value: null)
+                      : null,
                 ),
-                //
-                const Divider(thickness: 1, height: 48),
-                //
-                TextField(
-                  controller: _wsAddressController,
-                  decoration: const InputDecoration(
-                    labelText: 'WebSocket Address',
-                  ),
+              ),
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(48.0),
+                child: Column(
+                  children: <Widget>[
+                    const Text('Select an option', style: style.subtitleStyle),
+                    style.verticalButtonSpacing,
+                    OutlinedButton(
+                      onPressed: () => Dialogs.showNotImplementedDialog(
+                          context, 'Integrated Backend'),
+                      child: const Text('Launch Integrated Backend'),
+                    ),
+                    //
+                    const Divider(thickness: 1, height: 48),
+                    //
+                    TextField(
+                      controller: _wsAddressController,
+                      decoration: const InputDecoration(
+                        labelText: 'WebSocket Address',
+                      ),
+                    ),
+                    style.verticalButtonSpacing,
+                    OutlinedButton(
+                      onPressed: _isLoading
+                          ? null
+                          : () =>
+                              _beginConnectionToWs(_wsAddressController.text),
+                      child: const Text('Connect to Remote Backend'),
+                    ),
+                  ],
                 ),
-                style.verticalButtonSpacing,
-                OutlinedButton(
-                  onPressed: _isLoading
-                      ? null
-                      : () => _beginConnectionToWs(_wsAddressController.text),
-                  child: Text(_isLoading ? 'Loading' : 'Connect to Remote Backend'),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

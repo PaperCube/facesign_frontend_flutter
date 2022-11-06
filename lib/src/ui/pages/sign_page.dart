@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:facesign_frontend/src/core/datamodels/face_frame.dart';
+import 'package:facesign_frontend/src/core/states/connection_state.dart';
+import 'package:facesign_frontend/src/core/states/face_frame_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,9 +16,9 @@ import 'package:facesign_frontend/src/ui/pages/management_buttons_widget.dart';
 import 'package:facesign_frontend/src/ui/pages/sign_status_widget.dart';
 
 class SignPage extends ConsumerStatefulWidget {
-  SignPage({super.key, this.baseWs});
+  SignPage({super.key});
 
-  final WebSocket? baseWs;
+  // final WebSocket? baseWs;
 
   @override
   ConsumerState<SignPage> createState() => _SignPageState();
@@ -26,21 +30,8 @@ class _SignPageState extends ConsumerState<SignPage> {
   late final Timer _timer;
   late DateTime _clockOnDisplay;
 
-  late final wsStreamProvider = StreamProvider.autoDispose((ref) async* {
-    if (widget.baseWs == null) {
-      return;
-    }
-    final channel = IOWebSocketChannel(widget.baseWs!);
-    ref.onDispose(() => channel.sink.close(ws_status.normalClosure));
-
-    await for (final value in channel.stream) {
-      yield value.toString();
-    }
-
-    if (channel.closeCode != ws_status.normalClosure) {
-      throw Exception('channel closed with code ${channel.closeCode}');
-    }
-  });
+  late final WebSocket? ws;
+  StreamSubscription? _wsSubscription;
 
   @override
   void initState() {
@@ -48,33 +39,65 @@ class _SignPageState extends ConsumerState<SignPage> {
     _timer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
       _updateClock();
     });
+
+    ws = ref.read(wsProvider).websocket;
+    _setupWsSubscriptionListener();
     super.initState();
+  }
+
+  void _setupWsSubscriptionListener() {
+    final faceFrameProvider = ref.read(faceFrameStateProvider.notifier);
+    try {
+      _wsSubscription?.cancel();
+
+      _wsSubscription = ws?.listen(
+        (data) {
+          faceFrameProvider.updateWithWSMessageFrameBytes(data);
+        },
+        onError: (err, stacktrace) {
+          faceFrameProvider.setError(err, stacktrace);
+        },
+        cancelOnError: true,
+      );
+    } catch (err, stackTrace) {
+      Future(() {
+        faceFrameProvider.setError(err, stackTrace);
+      });
+    }
+  }
+
+  StreamSubscription? _cancelWsSubscriptionListener() {
+    final ret = _wsSubscription?..cancel();
+    _wsSubscription = null;
+    return ret;
   }
 
   @override
   void dispose() {
     _timer.cancel();
+    _cancelWsSubscriptionListener();
+    ws?.close(ws_status.normalClosure);
     super.dispose();
   }
 
   Widget _buildFacePreviewWidget() {
-    final AsyncValue<String?> wsMessage = ref.watch(wsStreamProvider);
-
-    return OverflowBox(
-      maxHeight: double.infinity,
-      maxWidth: double.infinity,
-      child: Column(
-        children: [
-          const Text('Face Recog Area'),
-          Text(
-            wsMessage.when(
-              data: (value) => value.toString(),
-              error: (error, stackTrace) => error.toString(),
-              loading: () => 'Loading...',
+    // print(_faceFrame.value!.videoFrame!.length);
+    final faceFrame = ref.watch(faceFrameStateProvider);
+    return faceFrame.when(
+      data: (value) => ClipOval(
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: Image.memory(
+              value.videoFrame!,
+              gaplessPlayback: true,
             ),
           ),
-        ],
+        ),
       ),
+      error: (error, stackTrace) => Text(error.toString()),
+      loading: () => const Text('Loading...'),
     );
   }
 
@@ -90,6 +113,7 @@ class _SignPageState extends ConsumerState<SignPage> {
           Expanded(
             child: Container(
               alignment: Alignment.center,
+              margin: const EdgeInsets.all(36.0),
               child: _buildFacePreviewWidget(),
             ),
           ),
