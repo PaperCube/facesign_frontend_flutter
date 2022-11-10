@@ -20,10 +20,24 @@ class AddNewFacePage extends ConsumerStatefulWidget {
   }
 }
 
-class _AddNewFacePageState extends ConsumerState<AddNewFacePage> {
-  bool _isAuthenticated = false;
+class _AddNewFacePageState extends ConsumerState<AddNewFacePage>
+    with BusyRunner {
+  final TextEditingController _nameController = TextEditingController();
 
-  TextEditingController _nameController = TextEditingController();
+  Future<void> submit() async {
+    await isardb.writeTxn(() async {
+      final userObj = UserEntry(name: _nameController.text);
+      final faceDescriptor = FaceDescriptor()
+        ..uid = userObj.uid
+        ..encodingSet = widget.faceInfo.faceEncoding!;
+
+      await Future.wait([
+        isardb.userEntrys.put(userObj),
+        isardb.faceDescriptors.put(faceDescriptor),
+      ]);
+    });
+    await Future.delayed(const Duration(milliseconds: 200));
+  }
 
   Widget _buildBody() {
     return Column(
@@ -35,22 +49,12 @@ class _AddNewFacePageState extends ConsumerState<AddNewFacePage> {
             labelText: '姓名',
           ),
         ),
-        style.verticalButtonSpacing,
+        style.verticalButtonSpacingLarge,
         OutlinedButton(
           child: const Text('提交'),
-          onPressed: () {
-            isardb.writeTxn(() async {
-              final userObj = UserEntry(name: _nameController.text);
-              final faceDescriptor = FaceDescriptor()
-                ..uid = userObj.uid
-                ..encodingSet = widget.faceInfo.faceEncoding!;
-
-              await Future.wait([
-                isardb.userEntrys.put(userObj),
-                isardb.faceDescriptors.put(faceDescriptor),
-              ]);
-            });
-          },
+          onPressed: () => runBusyFuture(submit()).then(
+            (_) => Navigator.of(context).pop(),
+          ),
         ),
       ],
     );
@@ -60,9 +64,10 @@ class _AddNewFacePageState extends ConsumerState<AddNewFacePage> {
     return Scaffold(
       key: const Key('AddNewFacePage'),
       appBar: AppBar(
-        title: const Text('录入新面孔'),
+        // title: const Text('录入新面孔'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
+        flexibleSpace: isBusy ? const LinearProgressIndicator() : null,
       ),
       body: Center(
         child: UnconstrainedBox(

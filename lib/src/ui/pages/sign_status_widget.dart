@@ -137,10 +137,12 @@ class _SignStatusWidgetState extends ConsumerState<SignStatusWidget>
           : _SignProcessStage.doneSigningIn;
     });
     Future.delayed(const Duration(seconds: 3), () {
-      setState(() {
-        signStateInProcess = null;
-        signProcessStage = _SignProcessStage.undefined;
-      });
+      if (mounted) {
+        setState(() {
+          signStateInProcess = null;
+          signProcessStage = _SignProcessStage.undefined;
+        });
+      }
     });
   }
 
@@ -172,6 +174,13 @@ class _SignStatusWidgetState extends ConsumerState<SignStatusWidget>
 
   Widget _buildSignStatusWidget() {
     final identity = signState.userIdentity!;
+    final signedDuration = signState.lastSigned == null
+        ? null
+        : DateTime.now().difference(signState.lastSigned!);
+    final signedDurationString = signedDuration == null
+        ? null
+        : TimeFormat.formatDuration(signedDuration);
+
     return Stack(
       children: [
         // Containers with no children try to be as big as possible
@@ -203,17 +212,20 @@ class _SignStatusWidgetState extends ConsumerState<SignStatusWidget>
                   ),
                 ),
                 Text(
-                  'Face Distance: ${signState.faceDescriptorMatch?.distance.toStringAsFixed(2)}',
+                  'UID: ${signState.userIdentity?.uid} | Dist: ${signState.faceDescriptorMatch?.distance.toStringAsFixed(2)}',
                   style: TextStyle(
                     color: Colors.grey[600],
-                    fontSize: 16,
+                    fontSize: 11,
                   ),
                 ),
+                style.verticalButtonSpacing,
                 Text(
                   signState.hasAlreadySigned
-                      ? '上次签到: ${signState.lastSigned!.toIso8601String()}'
+                      ? '已于 ${TimeFormat.formatDateTime(signState.lastSigned!)} 签到'
                       : '未签到',
                 ),
+                if (signState.hasAlreadySigned)
+                  Text('(${signedDurationString}前)'),
                 const SizedBox(
                   height: 48,
                 ),

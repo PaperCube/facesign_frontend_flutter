@@ -21,4 +21,21 @@ mixin BusyRunner<T extends StatefulWidget> on State<T> {
       });
     }
   }
+
+  Future<void> runBusy(Future Function() fn, {Function? onBusy, Function? onError}) async {
+    if (_isBusy) return;
+    setState(() {
+      _isBusy = true;
+      onBusy?.call();
+    });
+    try {
+      await fn();
+    } catch (e) {
+      onError?.call(e);
+    } finally {
+      setState(() {
+        _isBusy = false;
+      });
+    }
+  }
 }

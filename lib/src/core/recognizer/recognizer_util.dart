@@ -48,7 +48,8 @@ class RecognizerUtil {
       }
     }
 
-    result.sort((a, b) => -a.distance.compareTo(b.distance));
+    result.sort((a, b) => a.distance.compareTo(b.distance));
+    // print(result.map((x) => x.distance).toList());
 
     return result;
   }
