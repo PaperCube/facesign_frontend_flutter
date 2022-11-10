@@ -1,3 +1,4 @@
+import 'package:facesign_frontend/src/ui/pages/authenticator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'passcode_auth_widget.dart';
@@ -24,27 +25,13 @@ class _ManagementPageState extends ConsumerState<ManagementPage> {
     );
   }
 
-  Widget _buildAuthWidget() {
-    return PasscodeAuthWidget(
-      key: const Key('PasscodeAuth'),
-      actionCallback: () {
-        setState(() {
-          _isAuthenticated = true;
-        });
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 150),
-        transitionBuilder: (child, animation) =>
-            FadeTransition(opacity: animation, child: child),
-        child:
-            _isAuthenticated ? _buildManagementScaffold() : _buildAuthWidget(),
-      ),
+      body: AuthenticatorWidget(
+        childBuilder: () => _buildManagementScaffold(),
+      )
     );
   }
 }

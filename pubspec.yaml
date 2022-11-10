@@ -22,6 +22,11 @@ version: 1.0.0+1
 environment:
   sdk: '>=2.18.2 <3.0.0'
 
+
+# dependency versions
+isar_version: &isar_version 3.0.0-dev.8 # define the version to be used
+
+
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
@@ -40,6 +45,10 @@ dependencies:
   freezed_annotation: ^2.2.0
   web_socket_channel: ^2.2.0
 
+  isar: *isar_version
+  isar_flutter_libs: *isar_version # contains Isar Core
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -51,8 +60,10 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   build_runner: ^2.3.2
-  freezed: ^2.2.1
-  
+  freezed: 2.2.0
+
+  isar_generator: *isar_version
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

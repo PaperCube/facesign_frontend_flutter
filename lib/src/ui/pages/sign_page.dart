@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:facesign_frontend/src/core/datamodels/face_frame.dart';
 import 'package:facesign_frontend/src/core/states/connection_state.dart';
 import 'package:facesign_frontend/src/core/states/face_frame_state.dart';
+import 'package:facesign_frontend/src/ui/pages/face_preview_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -52,7 +53,12 @@ class _SignPageState extends ConsumerState<SignPage> {
 
       _wsSubscription = ws?.listen(
         (data) {
-          faceFrameProvider.updateWithWSMessageFrameBytes(data);
+          try{
+            faceFrameProvider.updateWithWSMessageFrameBytes(data);
+          } catch(err, stackTrace){
+            faceFrameProvider.setError(err, stackTrace);
+            print(stackTrace.toString());
+          }
         },
         onError: (err, stacktrace) {
           faceFrameProvider.setError(err, stacktrace);
@@ -75,34 +81,19 @@ class _SignPageState extends ConsumerState<SignPage> {
   @override
   void dispose() {
     _timer.cancel();
-    _cancelWsSubscriptionListener();
+    print('ws is null? ${ws == null}');
     ws?.close(ws_status.normalClosure);
+    _cancelWsSubscriptionListener();
     super.dispose();
   }
 
   Widget _buildFacePreviewWidget() {
     // print(_faceFrame.value!.videoFrame!.length);
-    final faceFrame = ref.watch(faceFrameStateProvider);
-    return faceFrame.when(
-      data: (value) => ClipOval(
-        child: AspectRatio(
-          aspectRatio: 1,
-          child: FittedBox(
-            fit: BoxFit.cover,
-            child: Image.memory(
-              value.videoFrame!,
-              gaplessPlayback: true,
-            ),
-          ),
-        ),
-      ),
-      error: (error, stackTrace) => Text(error.toString()),
-      loading: () => const Text('Loading...'),
-    );
+    return const FacePreviewWidget();
   }
 
   Widget _buildStatusWidget() {
-    return SignStatusWidget();
+    return const SignStatusWidget();
   }
 
   Widget _buildMainWidget() {
@@ -118,17 +109,7 @@ class _SignPageState extends ConsumerState<SignPage> {
             ),
           ),
           Expanded(
-            child: Card(
-              elevation: 2,
-              child: AnimatedSize(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOutCubic,
-                child: Padding(
-                  padding: const EdgeInsets.all(32),
-                  child: UnconstrainedBox(child: _buildStatusWidget()),
-                ),
-              ),
-            ),
+            child: _buildStatusWidget(),
           ),
         ],
       ),
@@ -171,6 +152,8 @@ class _SignPageState extends ConsumerState<SignPage> {
   Widget _buildManagementButtons() {
     return const ManagementButtonsWidget();
   }
+
+  bool _isPaused = false;
 
   @override
   Widget build(BuildContext context) {

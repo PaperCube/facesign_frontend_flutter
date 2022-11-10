@@ -1,6 +1,6 @@
 class UserIdentity{
-  UserIdentity(this.userId, this.name);
+  UserIdentity(this.uid, this.name);
 
-  final String userId;
+  final String uid;
   final String name;
 }

@@ -5,7 +5,11 @@ import 'src/ui/pages/sign_page.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() {
+import 'package:facesign_frontend/app_imports.dart';
+
+import './src/ui/ui_style.dart';
+
+void main() async {
   runApp(const MyApp());
 }
 
@@ -22,17 +26,25 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Face Sign',
         theme: ThemeData(
-            // This is the theme of your application.
-            //
-            // Try running your application with "flutter run". You'll see the
-            // application has a blue toolbar. Then, without quitting the app, try
-            // changing the primarySwatch below to Colors.green and then invoke
-            // "hot reload" (press "r" in the console where you ran "flutter run",
-            // or simply save your changes to "hot reload" in a Flutter IDE).
-            // Notice that the counter didn't reset back to zero; the application
-            // is not restarted.
-            primarySwatch: Colors.blue,
-            fontFamily: 'Inter'),
+          useMaterial3: true,
+          // This is the theme of your application.
+          //
+          // Try running your application with "flutter run". You'll see the
+          // application has a blue toolbar. Then, without quitting the app, try
+          // changing the primarySwatch below to Colors.green and then invoke
+          // "hot reload" (press "r" in the console where you ran "flutter run",
+          // or simply save your changes to "hot reload" in a Flutter IDE).
+          // Notice that the counter didn't reset back to zero; the application
+          // is not restarted.
+          // fontFamily: "Inter",
+          textTheme: Theme.of(context).textTheme.applyForEach((textStyle) {
+            return textStyle?.apply(
+              fontFamily: "Inter",
+              fontFamilyFallback: appFallbackFontFamily,
+            );
+          }),
+          primarySwatch: Colors.blue,
+        ),
         home: const MyHomePage(title: 'FaceSign Demo'),
       ),
     );
@@ -108,17 +120,25 @@ class _MyHomePageState extends State<MyHomePage> {
             OutlinedButton(
               child: const Text('Connect Wizard'),
               onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const ConnectWizardPage()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const ConnectWizardPage()));
               },
             ),
             OutlinedButton(
               child: const Text('Sign Page'),
               onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => SignPage()));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => SignPage()));
               },
-            )
+            ),
+            OutlinedButton(
+              child: const Text('Add New Face Page'),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>
+                        AddNewFacePage(faceInfo: const FaceInfo())));
+              },
+            ),
           ],
         ),
       ),

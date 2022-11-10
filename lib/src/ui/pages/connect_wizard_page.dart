@@ -22,7 +22,7 @@ class ConnectWizardPage extends ConsumerStatefulWidget {
 }
 
 class _ConnectWizardPageState extends ConsumerState<ConnectWizardPage> {
-  late final _wsAddressController = TextEditingController();
+  late final _wsAddressController = TextEditingController(text: 'ws://localhost:25565');
   var _isLoading = false;
 
   void _beginConnectionToWs(String addr) async {

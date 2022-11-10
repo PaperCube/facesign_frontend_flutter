@@ -3,9 +3,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PasscodeAuthWidget extends ConsumerStatefulWidget {
-  PasscodeAuthWidget({super.key, this.actionCallback});
+  PasscodeAuthWidget({super.key, this.actionCallback, this.cancelCallback});
 
   final void Function()? actionCallback;
+  final void Function()? cancelCallback;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
@@ -51,6 +52,7 @@ class _PasscodeAuthWidgetState extends ConsumerState<PasscodeAuthWidget> {
           padding: EdgeInsets.all(8.0),
           child: IconButton(
             onPressed: () {
+              widget.cancelCallback?.call();
               Navigator.pop(context);
             },
             icon: const Icon(Icons.arrow_back),

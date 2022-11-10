@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$FaceFrame {
   Uint8List? get videoFrame => throw _privateConstructorUsedError;
-  List<FaceInfo> get faceInfo => throw _privateConstructorUsedError;
+  List<FaceInfo>? get faceInfo => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $FaceFrameCopyWith<FaceFrame> get copyWith =>
@@ -29,7 +29,7 @@ abstract class $FaceFrameCopyWith<$Res> {
   factory $FaceFrameCopyWith(FaceFrame value, $Res Function(FaceFrame) then) =
       _$FaceFrameCopyWithImpl<$Res, FaceFrame>;
   @useResult
-  $Res call({Uint8List? videoFrame, List<FaceInfo> faceInfo});
+  $Res call({Uint8List? videoFrame, List<FaceInfo>? faceInfo});
 }
 
 /// @nodoc
@@ -46,17 +46,17 @@ class _$FaceFrameCopyWithImpl<$Res, $Val extends FaceFrame>
   @override
   $Res call({
     Object? videoFrame = freezed,
-    Object? faceInfo = null,
+    Object? faceInfo = freezed,
   }) {
     return _then(_value.copyWith(
       videoFrame: freezed == videoFrame
           ? _value.videoFrame
           : videoFrame // ignore: cast_nullable_to_non_nullable
               as Uint8List?,
-      faceInfo: null == faceInfo
+      faceInfo: freezed == faceInfo
           ? _value.faceInfo
           : faceInfo // ignore: cast_nullable_to_non_nullable
-              as List<FaceInfo>,
+              as List<FaceInfo>?,
     ) as $Val);
   }
 }
@@ -69,7 +69,7 @@ abstract class _$$_FaceFrameStateCopyWith<$Res>
       __$$_FaceFrameStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Uint8List? videoFrame, List<FaceInfo> faceInfo});
+  $Res call({Uint8List? videoFrame, List<FaceInfo>? faceInfo});
 }
 
 /// @nodoc
@@ -84,17 +84,17 @@ class __$$_FaceFrameStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? videoFrame = freezed,
-    Object? faceInfo = null,
+    Object? faceInfo = freezed,
   }) {
     return _then(_$_FaceFrameState(
       videoFrame: freezed == videoFrame
           ? _value.videoFrame
           : videoFrame // ignore: cast_nullable_to_non_nullable
               as Uint8List?,
-      faceInfo: null == faceInfo
+      faceInfo: freezed == faceInfo
           ? _value._faceInfo
           : faceInfo // ignore: cast_nullable_to_non_nullable
-              as List<FaceInfo>,
+              as List<FaceInfo>?,
     ));
   }
 }
@@ -102,18 +102,18 @@ class __$$_FaceFrameStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_FaceFrameState implements _FaceFrameState {
-  const _$_FaceFrameState(
-      {this.videoFrame, final List<FaceInfo> faceInfo = const []})
+  const _$_FaceFrameState({this.videoFrame, final List<FaceInfo>? faceInfo})
       : _faceInfo = faceInfo;
 
   @override
   final Uint8List? videoFrame;
-  final List<FaceInfo> _faceInfo;
+  final List<FaceInfo>? _faceInfo;
   @override
-  @JsonKey()
-  List<FaceInfo> get faceInfo {
+  List<FaceInfo>? get faceInfo {
+    final value = _faceInfo;
+    if (value == null) return null;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_faceInfo);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
@@ -147,12 +147,12 @@ class _$_FaceFrameState implements _FaceFrameState {
 abstract class _FaceFrameState implements FaceFrame {
   const factory _FaceFrameState(
       {final Uint8List? videoFrame,
-      final List<FaceInfo> faceInfo}) = _$_FaceFrameState;
+      final List<FaceInfo>? faceInfo}) = _$_FaceFrameState;
 
   @override
   Uint8List? get videoFrame;
   @override
-  List<FaceInfo> get faceInfo;
+  List<FaceInfo>? get faceInfo;
   @override
   @JsonKey(ignore: true)
   _$$_FaceFrameStateCopyWith<_$_FaceFrameState> get copyWith =>
@@ -161,8 +161,8 @@ abstract class _FaceFrameState implements FaceFrame {
 
 /// @nodoc
 mixin _$FaceInfo {
-  String? get reservedField => throw _privateConstructorUsedError;
-  Int64List? get identityMatrix => throw _privateConstructorUsedError;
+// String? reservedField,
+  Float64List? get faceEncoding => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $FaceInfoCopyWith<FaceInfo> get copyWith =>
@@ -174,7 +174,7 @@ abstract class $FaceInfoCopyWith<$Res> {
   factory $FaceInfoCopyWith(FaceInfo value, $Res Function(FaceInfo) then) =
       _$FaceInfoCopyWithImpl<$Res, FaceInfo>;
   @useResult
-  $Res call({String? reservedField, Int64List? identityMatrix});
+  $Res call({Float64List? faceEncoding});
 }
 
 /// @nodoc
@@ -190,18 +190,13 @@ class _$FaceInfoCopyWithImpl<$Res, $Val extends FaceInfo>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? reservedField = freezed,
-    Object? identityMatrix = freezed,
+    Object? faceEncoding = freezed,
   }) {
     return _then(_value.copyWith(
-      reservedField: freezed == reservedField
-          ? _value.reservedField
-          : reservedField // ignore: cast_nullable_to_non_nullable
-              as String?,
-      identityMatrix: freezed == identityMatrix
-          ? _value.identityMatrix
-          : identityMatrix // ignore: cast_nullable_to_non_nullable
-              as Int64List?,
+      faceEncoding: freezed == faceEncoding
+          ? _value.faceEncoding
+          : faceEncoding // ignore: cast_nullable_to_non_nullable
+              as Float64List?,
     ) as $Val);
   }
 }
@@ -213,7 +208,7 @@ abstract class _$$_FaceInfoCopyWith<$Res> implements $FaceInfoCopyWith<$Res> {
       __$$_FaceInfoCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? reservedField, Int64List? identityMatrix});
+  $Res call({Float64List? faceEncoding});
 }
 
 /// @nodoc
@@ -227,18 +222,13 @@ class __$$_FaceInfoCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? reservedField = freezed,
-    Object? identityMatrix = freezed,
+    Object? faceEncoding = freezed,
   }) {
     return _then(_$_FaceInfo(
-      reservedField: freezed == reservedField
-          ? _value.reservedField
-          : reservedField // ignore: cast_nullable_to_non_nullable
-              as String?,
-      identityMatrix: freezed == identityMatrix
-          ? _value.identityMatrix
-          : identityMatrix // ignore: cast_nullable_to_non_nullable
-              as Int64List?,
+      faceEncoding: freezed == faceEncoding
+          ? _value.faceEncoding
+          : faceEncoding // ignore: cast_nullable_to_non_nullable
+              as Float64List?,
     ));
   }
 }
@@ -246,16 +236,15 @@ class __$$_FaceInfoCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_FaceInfo implements _FaceInfo {
-  const _$_FaceInfo({this.reservedField, this.identityMatrix});
+  const _$_FaceInfo({this.faceEncoding});
 
+// String? reservedField,
   @override
-  final String? reservedField;
-  @override
-  final Int64List? identityMatrix;
+  final Float64List? faceEncoding;
 
   @override
   String toString() {
-    return 'FaceInfo(reservedField: $reservedField, identityMatrix: $identityMatrix)';
+    return 'FaceInfo(faceEncoding: $faceEncoding)';
   }
 
   @override
@@ -263,15 +252,13 @@ class _$_FaceInfo implements _FaceInfo {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_FaceInfo &&
-            (identical(other.reservedField, reservedField) ||
-                other.reservedField == reservedField) &&
             const DeepCollectionEquality()
-                .equals(other.identityMatrix, identityMatrix));
+                .equals(other.faceEncoding, faceEncoding));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, reservedField,
-      const DeepCollectionEquality().hash(identityMatrix));
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(faceEncoding));
 
   @JsonKey(ignore: true)
   @override
@@ -281,14 +268,10 @@ class _$_FaceInfo implements _FaceInfo {
 }
 
 abstract class _FaceInfo implements FaceInfo {
-  const factory _FaceInfo(
-      {final String? reservedField,
-      final Int64List? identityMatrix}) = _$_FaceInfo;
+  const factory _FaceInfo({final Float64List? faceEncoding}) = _$_FaceInfo;
 
-  @override
-  String? get reservedField;
-  @override
-  Int64List? get identityMatrix;
+  @override // String? reservedField,
+  Float64List? get faceEncoding;
   @override
   @JsonKey(ignore: true)
   _$$_FaceInfoCopyWith<_$_FaceInfo> get copyWith =>
