@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:facesign_frontend/src/core/datamodels/face_frame.dart';
 import 'package:facesign_frontend/src/core/states/connection_state.dart';
 import 'package:facesign_frontend/src/core/states/face_frame_state.dart';
+import 'package:facesign_frontend/src/core/states/sign_state.dart';
 import 'package:facesign_frontend/src/ui/pages/face_preview_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,6 +42,11 @@ class _SignPageState extends ConsumerState<SignPage> {
       _updateClock();
     });
 
+    Future(() {
+      ref.read(globalSignState.notifier).replaceWith(const SignState());
+      ref.read(faceFrameStateProvider.notifier).setLoading();
+    });
+
     ws = ref.read(wsProvider).websocket;
     _setupWsSubscriptionListener();
     super.initState();
@@ -53,9 +59,9 @@ class _SignPageState extends ConsumerState<SignPage> {
 
       _wsSubscription = ws?.listen(
         (data) {
-          try{
+          try {
             faceFrameProvider.updateWithWSMessageFrameBytes(data);
-          } catch(err, stackTrace){
+          } catch (err, stackTrace) {
             faceFrameProvider.setError(err, stackTrace);
             print(stackTrace.toString());
           }

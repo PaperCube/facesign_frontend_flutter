@@ -93,3 +93,6 @@ flutter:
     - family: Inter
       fonts:
         - asset: assets/fonts/Inter/Inter-variable.otf
+    - family: OPPOSans
+      fonts:
+        - asset: assets/fonts/OPPOSans/OPPOSans-R.ttf

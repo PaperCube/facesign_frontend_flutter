@@ -10,18 +10,14 @@ export 'user_entry.dart';
 
 import 'package:path/path.dart' as p;
 
-Isar? _isardb;
+late final Isar isardb;
 
-Isar get isardb {
-  if (_isardb == null) {
-    final path = p.absolute(p.join(p.current, '_wd/'));
-    Directory(path).createSync(recursive: true);
-
-    _isardb = Isar.openSync([
-      UserEntrySchema,
-      FaceDescriptorSchema,
-      SignRecordSchema,
-    ], name: 'defaultdb', directory: path);
-  }
-  return _isardb!;
+Future<void> loadIsar() async {
+  final path = p.absolute(p.join(p.current, '_wd/'));
+  Directory(path).createSync(recursive: true);
+  isardb = await Isar.open([
+    UserEntrySchema,
+    FaceDescriptorSchema,
+    SignRecordSchema,
+  ], name: 'defaultdb', directory: path);
 }

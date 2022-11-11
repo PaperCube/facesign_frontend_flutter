@@ -1,4 +1,5 @@
 import 'package:facesign_frontend/src/ui/pages/connect_wizard_page.dart';
+import 'package:facesign_frontend/src/ui/pages/management_page.dart';
 import 'package:flutter/material.dart';
 import 'another_route.dart';
 import 'src/ui/pages/sign_page.dart';
@@ -10,6 +11,7 @@ import 'package:facesign_frontend/app_imports.dart';
 import './src/ui/ui_style.dart';
 
 void main() async {
+  await loadIsar();
   runApp(const MyApp());
 }
 
@@ -100,46 +102,53 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            OutlinedButton(
-              child: const Text('Connect Wizard'),
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const ConnectWizardPage()));
-              },
-            ),
-            OutlinedButton(
-              child: const Text('Sign Page'),
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => SignPage()));
-              },
-            ),
-            OutlinedButton(
-              child: const Text('Add New Face Page'),
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        AddNewFacePage(faceInfo: const FaceInfo())));
-              },
-            ),
-          ],
+        child: Container(
+          width: 600,
+          child: Column(
+            // Column is also a layout widget. It takes a list of children and
+            // arranges them vertically. By default, it sizes itself to fit its
+            // children horizontally, and tries to be as tall as its parent.
+            //
+            // Invoke "debug painting" (press "p" in the console, choose the
+            // "Toggle Debug Paint" action from the Flutter Inspector in Android
+            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+            // to see the wireframe for each widget.
+            //
+            // Column has various properties to control how it sizes itself and
+            // how it positions its children. Here we use mainAxisAlignment to
+            // center the children vertically; the main axis here is the vertical
+            // axis because Columns are vertical (the cross axis would be
+            // horizontal).
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              OutlinedButton(
+                child: const Text('Connect Wizard'),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const ConnectWizardPage()));
+                },
+              ),
+              verticalButtonSpacing,
+              const Divider(),
+              verticalButtonSpacing,
+              Text('Debug Operations', style: TextStyle(color: Colors.grey[600])),
+              OutlinedButton(
+                child: const Text('Sign Page'),
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => SignPage()));
+                },
+              ),
+              OutlinedButton(
+                child: const Text('Add New Face Page'),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          AddNewFacePage(faceInfo: const FaceInfo())));
+                },
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -147,12 +156,12 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (ctx) => const AnotherPage(body: 'Hello World'),
+              builder: (ctx) => ManagementPage(),
             ),
           );
         },
-        tooltip: 'Will not work',
-        child: const Icon(Icons.stop),
+        tooltip: '管理设置',
+        child: const Icon(Icons.settings),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

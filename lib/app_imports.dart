@@ -9,3 +9,4 @@ export './src/core/io/data_exporter.dart';
 
 export './src/util/time_format.dart';
 export './src/ui/ui_tools.dart';
+export './src/ui/dialogs.dart';

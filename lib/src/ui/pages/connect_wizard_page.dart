@@ -74,12 +74,13 @@ class _ConnectWizardPageState extends ConsumerState<ConnectWizardPage> {
                 padding: const EdgeInsets.all(48.0),
                 child: Column(
                   children: <Widget>[
-                    const Text('Select an option', style: style.subtitleStyle),
+                    const Text('连接到推理器', style: style.subtitleStyle),
                     style.verticalButtonSpacing,
-                    OutlinedButton(
-                      onPressed: () => Dialogs.showNotImplementedDialog(
-                          context, 'Integrated Backend'),
-                      child: const Text('Launch Integrated Backend'),
+                    const OutlinedButton(
+                      // onPressed: () => Dialogs.showNotImplementedDialog(
+                      //     context, 'Integrated Backend'),
+                      onPressed: null,
+                      child: const Text('未捆绑内置推理器'),
                     ),
                     //
                     const Divider(thickness: 1, height: 48),
@@ -96,7 +97,7 @@ class _ConnectWizardPageState extends ConsumerState<ConnectWizardPage> {
                           ? null
                           : () =>
                               _beginConnectionToWs(_wsAddressController.text),
-                      child: const Text('Connect to Remote Backend'),
+                      child: const Text('使用此地址连接到推理器'),
                     ),
                   ],
                 ),

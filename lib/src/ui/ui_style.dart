@@ -7,7 +7,7 @@ const horizontalButtonSpacingLarge = SizedBox(width: 36);
 const verticalButtonSpacingLarge = SizedBox(height: 36);
 
 const subtitleStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.w600);
-const appFallbackFontFamily = <String>['Inter', 'DengXian', 'sans-serif'];
+const appFallbackFontFamily = <String>['Inter', 'OPPOSans', 'DengXian', 'sans-serif'];
 
 DefaultTextStyle defaultTextStyle({required Widget child}) {
   return DefaultTextStyle(

@@ -57,7 +57,7 @@ class RecognizerUtil {
   static Future<List<FaceDescriptorMatch>> compareFacesAsync(
     List<FaceDescriptor> all,
     FaceEncodingVector toCheck, [
-    double tolerance = 0.6,
+    double tolerance = 0.45,
   ]) async {
     return await compute(_compareFacesWorker, [all, toCheck, tolerance]);
   }

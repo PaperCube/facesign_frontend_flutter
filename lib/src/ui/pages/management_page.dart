@@ -82,6 +82,18 @@ class _ManagementPageState extends ConsumerState<ManagementPage>
     }
   }
 
+  Future<void> _clearUsers() async {
+    final cleared = await Dialogs.showConfirmDialog(context, '清空用户', '确定要清空所有用户吗？', () async {
+      await isardb.writeTxn(() async {
+         await isardb.userEntrys.clear();
+         await isardb.faceDescriptors.clear();
+      });
+    }) ?? false;
+    if(cleared){
+      showSnackBar('已清空所有用户');
+    }
+  }
+
   Widget _buildList() {
     return ListView(
       children: <Widget>[
@@ -90,6 +102,12 @@ class _ManagementPageState extends ConsumerState<ManagementPage>
         _inkwellListTile(
           '导出今日签到记录',
           onTap: () => runBusyFuture(_exportRecords()),
+        ),
+        // section
+        _sectionTitle('重置'),
+        _inkwellListTile(
+          '清空用户',
+          onTap: () => runBusyFuture(_clearUsers()),
         ),
       ],
     );

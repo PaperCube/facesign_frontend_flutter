@@ -25,6 +25,10 @@ class FaceFrameStateNotifier extends StateNotifier<_AsyncFaceFrame> {
     state = AsyncValue.data(newFrame);
   }
 
+  void setLoading(){
+    state = const AsyncValue.loading();
+  }
+
   void setError(Object err, StackTrace stackTrace){
     state = AsyncValue.error(err, stackTrace);
   }
